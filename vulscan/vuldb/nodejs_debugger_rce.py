@@ -8,9 +8,9 @@ import string
 import random
 import time
 try:
-    import urllib2
+    import urllib.request
 except Exception as e:
-    import urllib.request as urllib2
+    import urllib.request as urllib.request
 
 def get_plugin_info():
     plugin_info = {
@@ -50,7 +50,7 @@ def ip_address(ip, port):
 def dnslog_check(server, hash_str):
     url = "http://{}:8088/{}".format(server, hash_str)
     try:
-        content = urllib2.urlopen(url, timeout=5).read()
+        content = urllib.request.urlopen(url, timeout=5).read()
     except Exception as e:
         return False
     else:
@@ -83,5 +83,5 @@ def check(ip, port, timeout):
 
 
 if __name__ == '__main__':
-    print(check("127.0.0.1", 5858, 10))
+    print((check("127.0.0.1", 5858, 10)))
         

@@ -4,10 +4,10 @@ import _ctypes
 import json
 import platform
 import os
-import urllib2
+import urllib.request
 import sys
 
-from urllib import urlretrieve
+from urllib.request import urlretrieve
 import zipfile
 
 
@@ -30,11 +30,11 @@ class kunpeng:
                 return v
 
     def check_version(self):
-        print 'check version'
+        print('check version')
         release = self._get_release_latest()
-        # print(release)
-        if release['tag_name'] != self.get_version():
-            print 'new version', release['tag_name']
+        print(release['tag_name'].encode())
+        if release['tag_name'].encode() != self.get_version():
+            print('new version', release['tag_name'])
             self._down_release(release['tag_name'])
             return release
 
@@ -45,13 +45,13 @@ class kunpeng:
             '/kunpeng_{}_v{}.zip'.format(self.system, version)
         z_file = zipfile.ZipFile(save_path, 'r')
         dat = z_file.read('kunpeng_c' + self.suf_map[self.system])
-        print len(dat)
+        print(len(dat))
         new_lib = self.pwd + '/kunpeng_v' + version + self.suf_map[self.system]
         lib_f = open(new_lib,'wb')
         lib_f.write(dat)
         lib_f.close()
         z_file.close()
-        print 'update success',version
+        print('update success',version)
         self._load_kunpeng()
 
     def close(self):
@@ -63,22 +63,22 @@ class kunpeng:
             _ctypes.dlclose(handle)
 
     def _down_release(self, version):
-        print 'kunpeng update ', version
+        print('kunpeng update ', version)
         save_path = self.pwd + \
             '/kunpeng_{}_v{}.zip'.format(self.system, version)
         down_url = 'https://github.com/opensec-cn/kunpeng/releases/download/{}/kunpeng_{}_v{}.zip'.format(
             version, self.system.lower(), version)
-        print 'url', down_url
+        print('url', down_url)
         urlretrieve(down_url, save_path, self._callbackinfo)
 
     def _callbackinfo(self, down, block, size):
         per = 100.0*(down*block)/size
         if per > 100:
             per = 100
-        print '%.2f%%' % per
+        print('%.2f%%' % per)
 
     def _get_release_latest(self):
-        body = urllib2.urlopen(
+        body = urllib.request.urlopen(
             'https://api.github.com/repos/opensec-cn/kunpeng/releases/latest').read()
         release = json.loads(body)
         return release
@@ -97,8 +97,8 @@ class kunpeng:
         self.kunpeng.Check.argtypes = [c_char_p]
         self.kunpeng.Check.restype = c_char_p
         self.kunpeng.SetConfig.argtypes = [c_char_p]
-        self.kunpeng.GetVersion.restype = c_char_p
-        print self.get_version()
+        self.kunpeng.GetVersion.restype = c_char_p    #  返回值的类型是 'bytes' object
+        print("self.get_version():",self.get_version())
 
     def get_plugin_list(self):
         result = self.kunpeng.GetPlugins()

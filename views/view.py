@@ -3,20 +3,22 @@
 import json
 import os
 from datetime import datetime
-from urllib import unquote, urlopen, urlretrieve, quote, urlencode
+from urllib.parse import unquote, quote,urlencode
+from urllib.request import urlopen, urlretrieve
 from bson.json_util import dumps
 from bson.objectid import ObjectId
 from flask import request, render_template, redirect, url_for, session, make_response
 from flask_wtf.csrf import CSRFError
-from lib.CreateExcel import *
-from lib.Login import logincheck
-from lib.AntiCSRF import anticsrf
-from lib.QueryLogic import querylogic
+from .lib.CreateExcel import *
+from .lib.Login import logincheck
+from .lib.AntiCSRF import anticsrf
+from .lib.QueryLogic import querylogic
 from werkzeug.utils import secure_filename
 from . import app, Mongo, page_size, file_path, csrf
-import urllib2
+import urllib.request
 import copy
 
+import re
 
 
 # 搜索页
@@ -378,10 +380,10 @@ def AddPlugin():
         for _ in code_tuple:
             code += _
         params = {'code': code}
-        req = urllib2.Request('https://sec.ly.com/xunfeng/pluginupload')
+        req = urllib.request.Request('https://sec.ly.com/xunfeng/pluginupload')
         req.add_header('Content-Type','application/x-www-form-urlencoded')
-        rsp = urllib2.urlopen(req,urlencode(params))
-        print 'upload result:' + rsp.read()
+        rsp = urllib.request.urlopen(req,urlencode(params))
+        print('upload result:' + rsp.read())
     return result
 
 
@@ -555,26 +557,69 @@ def installplugin():
                         file_name.split('.')[-1]
         else:
             db_record = Mongo.coll['Plugin'].delete_one({'filename': file_name.split('.')[0]})
+    print('https://sec.ly.com/xunfeng/getplugin?name=' + item['location'], file_path + file_name)
     if item['location'].find('/') == -1:
         urlretrieve('https://sec.ly.com/xunfeng/getplugin?name=' + item['location'], file_path + file_name)
     else:
         urlretrieve(item['location'], file_path + file_name)  # 兼容旧的插件源
+    
     if os.path.exists(file_path + file_name):
         try:
             if file_name.split('.')[-1] == 'py':
-                module = __import__(file_name.split('.')[0])
+                json_text = open(file_path + file_name, 'r', encoding='UTF-8').read()
+                json_text = json_text.replace("import re\n","import re123\n")
+                json_text = json_text.replace("re.findall(","re123.findall(")
+                json_text = json_text.replace("except Exception, e:","except Exception as e:")
+                json_text = json_text.replace("except Exception,e:","except Exception as e:")
+                json_text = json_text.replace("except urllib2.HTTPError, e:","except urllib2.HTTPError as e:")
+                json_text = json_text.replace("except urllib2.HTTPError,e:","except urllib2.HTTPError as e:")
+                json_text = json_text.replace("except urllib2.URLError, e:","except urllib2.URLError as e:")
+                json_text = json_text.replace("except urllib2.URLError,e:","except urllib2.URLError as e:")
+                json_text = json_text.replace("urllib2","urllib.request")
+                json_text = json_text.replace("import Queue","import queue")
+                json_text = json_text.replace("import StringIO","import io")
+                json_text = json_text.replace(" StringIO."," io.")
+                json_text = json_text.replace("\t","    ")
+                json_text = json_text.replace("import urlparse","from urllib.parse import urlparse")
+                json_text = json_text.replace("import HTMLParser","from html.parser import HTMLParser")
+                pat = ' print(.*)\n'
+                ret_1=re.search(pat, json_text)
+                if ret_1 != None:
+                    print(ret_1.group())
+                    print(ret_1.group(1))
+                    json_text = json_text.replace(" print"+ret_1.group(1)," print("+ret_1.group(1)+")")
+                    #json_text = re.sub(pat, double, json_text)
+                json_text = json_text.replace("import re123\n","import re\n")
+                json_text = json_text.replace("re123.findall(","re.findall(")
+                #print(json_text)
+                # 'str' object has no attribute 'decode'
+                #import codecs
+                #codecs.decode('ab', 'hex')
+                pat = "    return (.*)\.decode\('hex'\)"
+                ret_2=re.search(pat, json_text)
+                if ret_2 != None:
+                    print(ret_2.group(1))
+                    json_text = json_text.replace(json_text,"import codecs\n"+json_text)
+                    json_text = json_text.replace("    return "+ret_2.group(1)+".decode('hex')","    return str(codecs.decode("+ret_2.group(1)+",'hex'))")
+                with open(file_path + file_name,'w+',encoding='utf-8') as f:
+                    f.write(json_text)
+                    f.seek(0)
+                module = __import__(file_name.split('.')[0])   #这个位置导致插件安装失败,python2.*兼容问题
+                print("兼容")
                 mark_json = module.get_plugin_info()
                 json_string['filename'] = file_name.split('.')[0]
             else:
-                json_text = open(file_path + file_name, 'r').read()
+                json_text = open(file_path + file_name, 'r', encoding='UTF-8').read()
                 mark_json = json.loads(json_text)
                 json_string['filename'] = file_name
                 mark_json.pop('plugin')
+            
             json_string.update(mark_json)
             Mongo.coll['Plugin'].insert(json_string)
             Mongo.coll['Update'].update_one({'unicode': unicode}, {'$set': {'isInstall': 1}})
             rsp = 'success'
-        except:
+        except Exception as e:
+            print("error:",e)
             pass
     return rsp
 

@@ -1,6 +1,6 @@
 # coding:utf-8
 # author:wolf@YSRC
-import thread
+import _thread
 from lib.common import *
 from lib.start import *
 if __name__ == "__main__":
@@ -10,9 +10,9 @@ if __name__ == "__main__":
         STATISTICS = get_statistics()  # 读取统计信息
         MASSCAN_AC = [0]
         NACHANGE = [0]
-        thread.start_new_thread(
+        _thread.start_new_thread(
             monitor, (CONFIG_INI, STATISTICS, NACHANGE))  # 心跳线程
-        thread.start_new_thread(cruise, (STATISTICS, MASSCAN_AC))  # 失效记录删除线程
+        _thread.start_new_thread(cruise, (STATISTICS, MASSCAN_AC))  # 失效记录删除线程
         socket.setdefaulttimeout(int(CONFIG_INI['Timeout']) / 2)  # 设置连接超时
         ac_data = []
         while True:
@@ -33,5 +33,5 @@ if __name__ == "__main__":
                 s.statistics = STATISTICS
                 s.run()
             time.sleep(60)
-    except Exception, e:
-        print e
+    except Exception as e:
+        print("123"+e)
