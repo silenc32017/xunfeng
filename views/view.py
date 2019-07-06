@@ -567,15 +567,16 @@ def installplugin():
         try:
             if file_name.split('.')[-1] == 'py':
                 json_text = open(file_path + file_name, 'r', encoding='UTF-8').read()
-                json_text = json_text.replace("import re\n","import re123\n")
-                json_text = json_text.replace("re.findall(","re123.findall(")
+                #json_text = json_text.replace("import re\n","import re123\n")
+                #json_text = json_text.replace("re.findall(","re123.findall(")
                 json_text = json_text.replace("except Exception, e:","except Exception as e:")
                 json_text = json_text.replace("except Exception,e:","except Exception as e:")
                 json_text = json_text.replace("except urllib2.HTTPError, e:","except urllib2.HTTPError as e:")
                 json_text = json_text.replace("except urllib2.HTTPError,e:","except urllib2.HTTPError as e:")
                 json_text = json_text.replace("except urllib2.URLError, e:","except urllib2.URLError as e:")
                 json_text = json_text.replace("except urllib2.URLError,e:","except urllib2.URLError as e:")
-                json_text = json_text.replace("urllib2","urllib.request")
+                if json_text.find('import urllib.request as urllib2')==-1:
+                    json_text = json_text.replace("urllib2","urllib.request")
                 json_text = json_text.replace("import Queue","import queue")
                 json_text = json_text.replace("import StringIO","import io")
                 json_text = json_text.replace(" StringIO."," io.")
@@ -589,8 +590,8 @@ def installplugin():
                     print(ret_1.group(1))
                     json_text = json_text.replace(" print"+ret_1.group(1)," print("+ret_1.group(1)+")")
                     #json_text = re.sub(pat, double, json_text)
-                json_text = json_text.replace("import re123\n","import re\n")
-                json_text = json_text.replace("re123.findall(","re.findall(")
+                #json_text = json_text.replace("import re123\n","import re\n")
+                #json_text = json_text.replace("re123.findall(","re.findall(")
                 #print(json_text)
                 # 'str' object has no attribute 'decode'
                 #import codecs

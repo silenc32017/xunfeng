@@ -40,7 +40,7 @@ class ThreadNum(threading.Thread):
 class start:
     def __init__(self, config):  # 默认配置
         self.config_ini = config
-        self.queue = Queue.Queue()
+        self.queue = queue.Queue()
         self.thread = int(self.config_ini['Thread'])
         self.scan_list = self.config_ini['Scan_list'].split('\n')
         self.mode = int(self.config_ini['Masscan'].split('|')[0])

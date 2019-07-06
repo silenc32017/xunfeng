@@ -34,4 +34,4 @@ if __name__ == "__main__":
                 s.run()
             time.sleep(60)
     except Exception as e:
-        print("123"+e)
+        print("nascan.py error: ",e)

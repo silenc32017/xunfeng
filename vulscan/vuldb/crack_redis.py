@@ -33,5 +33,5 @@ def check(ip, port, timeout):
                 result = s.recv(1024)
                 if '+OK' in result:
                     return u"存在弱口令，密码：%s" % (pass_)
-    except Exception, e:
+    except Exception as e:
         pass

@@ -1,14 +1,14 @@
 # coding:utf-8
 import re
-import urllib2
+import urllib.request
 
 import struct
 import socket
 import time
 import select
-
+import codecs
 def request2bin(x):
-    return x.replace(' ', '').replace('\n', '').decode('hex')
+    return str(codecs.decode(x.replace(' ', '').replace('\n', ''),'hex'))
 
 client_key_exchange = request2bin('''
 16 03 02 00  dc 01 00 00 d8 03 02 53
@@ -106,8 +106,8 @@ def check(host, port, timeout):
         if check_heardbeat(host=host, port=port):
             info = u'存在心脏出血漏洞'
             return info
-    except Exception, e:
+    except Exception as e:
         pass
 
 if __name__ == '__main__':
-    print check('baidu.com', 443)
+    print( check('baidu.com', 443,18))

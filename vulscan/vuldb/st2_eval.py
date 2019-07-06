@@ -1,8 +1,8 @@
 # coding=utf-8
-import urllib2
+import urllib.request
 import re
-import urlparse
-import HTMLParser
+from urllib.parse import urlparse
+from html.parser import HTMLParser
 
 
 def get_plugin_info():
@@ -21,7 +21,7 @@ def get_plugin_info():
 
 def get_url(domain, timeout):
     url_list = []
-    res = urllib2.urlopen('http://' + domain, timeout=timeout)
+    res = urllib.request.urlopen('http://' + domain, timeout=timeout)
     html = res.read()
     root_url = res.geturl()
     m = re.findall("<a[^>]*?href=('|\")(.*?)\\1", html, re.I)
@@ -66,11 +66,11 @@ def check(ip, port, timeout):
                 for poc in flag_list[ver]['poc']:
                     try:
                         if ver == "S2_045":
-                            request = urllib2.Request(url)
+                            request = urllib.request.Request(url)
                             request.add_header("Content-Type", poc)
                         else:
-                            request = urllib2.Request(url, poc)
-                        res_html = urllib2.urlopen(request, timeout=timeout).read(204800)
+                            request = urllib.request.Request(url, poc)
+                        res_html = urllib.request.urlopen(request, timeout=timeout).read(204800)
                         if flag_list[ver]['key'] in res_html:
                             return ver + u" 代码执行漏洞"
                     except:

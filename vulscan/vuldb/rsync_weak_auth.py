@@ -6,11 +6,11 @@ import time
 import hashlib
 from itertools import product
 from base64 import b64encode
-from exceptions import Exception
-
+#from exceptions import Exception
+import codecs
 
 def hex2str(x):
-    return x.replace(' ', '').replace('\n', '').decode('hex')
+    return str(codecs.decode(x.replace(' ', '').replace('\n', ''),'hex'))
 
 ver_num_com = re.compile('@RSYNCD: (\d+)')
 
@@ -165,7 +165,7 @@ def check(host, port, timeout=5):
                     except VersionNotSuppError as e:
                         # TODO fengxun error support
                         pass
-    except Exception, e:
+    except Exception as e:
         pass
 
     if not_unauth_list:

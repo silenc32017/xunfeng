@@ -33,5 +33,5 @@ def check(ip, port, timeout):
             result = s.recv(1024)
             if "totalLinesWritten" in result:
                 return u"未授权访问"
-    except Exception, e:
+    except Exception as e:
         pass

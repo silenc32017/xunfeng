@@ -1,6 +1,6 @@
 # coding:utf-8
 import re
-import urllib2
+import urllib.request
 
 
 def get_plugin_info():
@@ -20,7 +20,7 @@ def get_plugin_info():
 def check(ip, port, timeout):
     try:
         url = "http://" + ip + ":" + str(port)
-        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor())
+        opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor())
         request = opener.open(url + "/dashboard.php", timeout=timeout)
         res_html = request.read()
     except:

@@ -1,8 +1,8 @@
 # coding=utf-8
-import urllib2
+import urllib.request
 import re
-import urlparse
-import HTMLParser
+from urllib.parse import urlparse
+from html.parser import HTMLParser
 import ssl
 
 try:
@@ -32,7 +32,7 @@ def get_url(domain,port,timeout):
         surl = 'https://' + domain
     else:
         surl = 'http://' + domain
-    res = urllib2.urlopen(surl, timeout=timeout)
+    res = urllib.request.urlopen(surl, timeout=timeout)
     html = res.read()
     root_url = res.geturl()
     m = re.findall("<(?:img|link|script)[^>]*?(?:src|href)=('|\")(.*?)\\1", html, re.I)
@@ -53,11 +53,11 @@ def check(ip, port, timeout):
     for url in url_list:
         if i >= 3: break
         i += 1
-        headers = urllib2.urlopen(url,timeout=timeout).headers
+        headers = urllib.request.urlopen(url,timeout=timeout).headers
         file_len = headers["Content-Length"]
-        request = urllib2.Request(url)
+        request = urllib.request.Request(url)
         request.add_header("Range", "bytes=-%d,-9223372036854%d"%(int(file_len)+623,776000-(int(file_len)+623)))
-        cacheres = urllib2.urlopen(request, timeout=timeout)
+        cacheres = urllib.request.urlopen(request, timeout=timeout)
         if cacheres.code == 206 and "Content-Range" in cacheres.read(2048):
             info = u"存在Range整形溢出漏洞（CVE-2017-7529）"
             if ": HIT" in str(cacheres.headers):

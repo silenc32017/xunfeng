@@ -32,5 +32,5 @@ def check(ip, port, timeout):
 
         if b'STORED' in result and b'END' in data:
             return u"存在rddos漏洞"
-    except Exception, e:
+    except Exception as e:
         pass

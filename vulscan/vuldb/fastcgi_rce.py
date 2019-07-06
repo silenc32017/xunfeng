@@ -2,9 +2,9 @@
 
 import socket
 import time
-
+import codecs
 def bin2str(x):
-    return x.replace(' ', '').replace('\n', '').decode('hex')
+    return str(codecs.decode(x.replace(' ', '').replace('\n', ''),'hex'))
 
 exp_payload_base = bin2str("""
 01 01 00 01 00 08 00 00 00 01 00 00 00 00 00 00

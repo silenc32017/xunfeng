@@ -1,6 +1,6 @@
 # coding:utf-8
 # author:wolf
-import urllib2
+import urllib.request
 
 
 def get_plugin_info():
@@ -30,12 +30,12 @@ def check(host, port, timeout):
             try:
                 PostStr = 'j_username=%s&j_password=%s&loginButton=Login&loginButton.DisabledHiddenField=true' % (
                 user, password)
-                request = urllib2.Request(url + '/j_security_check?loginButton=Login', PostStr)
-                res = urllib2.urlopen(request, timeout=timeout)
+                request = urllib.request.Request(url + '/j_security_check?loginButton=Login', PostStr)
+                res = urllib.request.urlopen(request, timeout=timeout)
                 res_html = res.read()
-            except urllib2.HTTPError:
+            except urllib.request.HTTPError:
                 return
-            except urllib2.URLError:
+            except urllib.request.URLError:
                 error_i += 1
                 if error_i >= 3:
                     return

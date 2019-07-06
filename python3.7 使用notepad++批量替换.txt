@@ -1,0 +1,118 @@
+notepad++
+
+【普通替换：】
+urllib2
+urllib.request或者import urllib.request as urllib2
+
+
+import StringIO
+from io import StringIO
+
+
+except Exception, e:
+except Exception as e:
+
+except Exception,e:
+except Exception as e:
+
+.URLError, e:
+.URLError,e:
+.URLError as e:
+
+.HTTPError,e:
+.HTTPError, e:
+.HTTPError as e:
+
+import Queue
+import queue
+
+
+import reload
+from importlib import reload
+
+
+Tab键 替换成 四个空格
+
+import urlparse
+from urllib.parse import urlparse
+
+import HTMLParser
+from html.parser import HTMLParser
+
+
+
+
+
+【扩展替换：】
+\t
+替换成四个空格：    
+
+
+
+【正则替换】
+    return x.replace(' ', '').replace('\n', '').decode('hex')
+    return (.*)\.decode\('hex'\)
+    return str\(codecs.decode\(\1,'hex'\)\)
+添加
+import codecs
+
+    print check('baidu.com', 443)
+    print(.*)\r
+    print\(\1\)
+
+
+
+
+
+
+
+【遇到错误：】
+TabError: inconsistent use of tabs and spaces in indentation
+不一致的使用制表符和空格缩进
+
+
+rsync_weak_auth.py
+Traceback (most recent call last):
+  File "G:\tools\xunfeng\vulscan\vuldb\rsync_weak_auth.py", line 9, in <module>
+    from exceptions import Exception
+ModuleNotFoundError: No module named 'exceptions'
+
+pip install Exception
+Collecting Exception
+  Downloading https://files.pythonhosted.org/packages/db/b7/2ebe2a6f154a525465d5fe181ccc4b9d570d5210
+ac337a450b9b1ed21333/exception-0.1.0-py2.py3-none-any.whl
+Collecting argparse (from Exception)
+  Downloading https://files.pythonhosted.org/packages/f2/94/3af39d34be01a24a6e65433d19e1070993742249
+05f1e0cc6bbe1fd22a2f/argparse-1.4.0-py2.py3-none-any.whl
+Requirement already satisfied: six in d:\program files\python37\lib\site-packages (from Exception) (
+1.12.0)
+Installing collected packages: argparse, Exception
+Successfully installed Exception-0.1.0 argparse-1.4.0
+不过没用，python3.x版本移除了exceptions模块
+注释：
+#from exceptions import Exception
+
+
+Traceback (most recent call last):
+  File "G:\tools\xunfeng\vulscan\vuldb\crack_supervisor_web.py", line 104, in <module>
+    print( check("127.0.0.1", 9001, 10))
+  File "G:\tools\xunfeng\vulscan\vuldb\crack_supervisor_web.py", line 57, in check
+    for pass_ in PASSWORD_DIC:
+NameError: name 'PASSWORD_DIC' is not defined
+..
+
+
+
+
+python nascan/nascan.py
+a bytes-like object is required, not 'str'
+	_thread.start_new_thread(
+            monitor, (CONFIG_INI, STATISTICS, NACHANGE))  # 心跳线程
+
+
+
+
+
+
+
+

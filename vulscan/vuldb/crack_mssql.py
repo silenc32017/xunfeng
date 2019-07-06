@@ -49,7 +49,7 @@ def auth(host, port, username, password, timeout):
         packet = sock.recv(1024)
         if 'master' in packet:
             return True
-    except Exception, e:
+    except Exception as e:
         pass
 
 
@@ -62,5 +62,5 @@ def check(ip, port, timeout):
                 result = auth(ip, port, user, pass_, timeout)
                 if result == True:
                     return u"存在弱口令，账号：%s，密码：%s" % (user, pass_)
-            except Exception,e:
+            except Exception as e:
                 if "Errno 10061" in str(e) or "timed out" in str(e): return

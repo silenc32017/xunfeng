@@ -19,7 +19,7 @@ def format_config(config_name, config_info):
                 name, location, key, value = mark.strip().split("|", 3)
                 mark_list.append([name.lower(), location, key, value])
     except Exception as e:
-        print(e)
+        print("nascan format_config error:",e)
     return mark_list
 
 
@@ -42,11 +42,11 @@ def monitor(CONFIG_INI, STATISTICS, NACHANGE):
             if date_ not in STATISTICS: STATISTICS[date_] = {"add": 0, "update": 0, "delete": 0}
             mongo.na_db.Statistics.update({"date": date_}, {"$set": {"info": STATISTICS[date_]}}, upsert=True)
             new_config = get_config()
-            if base64.b64encode(CONFIG_INI["Scan_list"]) != base64.b64encode(new_config["Scan_list"]):NACHANGE[0] = 1
+            if base64.b64encode(CONFIG_INI["Scan_list"].encode()) != base64.b64encode(new_config["Scan_list"].encode()):NACHANGE[0] = 1
             CONFIG_INI.clear()
             CONFIG_INI.update(new_config)
         except Exception as e:
-            print(e)
+            print("nascan monitor error:",e)
         time.sleep(30)
 
 
