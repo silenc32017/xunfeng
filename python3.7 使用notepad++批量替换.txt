@@ -112,6 +112,29 @@ a bytes-like object is required, not 'str'
 
 
 
+module 'mongo' has no attribute 'NA_INFO'
+  G:\H\tools\xunfeng\nascan\lib\common.py (2 hits)
+	Line 69:                 data = mongo.NA_INFO.find().sort("time", 1)
+	Line 85:                         mongo.NA_INFO.remove({"ip": ip, "port": port})
+  G:\H\tools\xunfeng\nascan\lib\mongo.py (1 hit)
+	Line 9: NA_INFO = na_db.Info
+  G:\H\tools\xunfeng\nascan\lib\scan.py (6 hits)
+	Line 42:                     mongo.NA_INFO.update({'ip': self.ip, 'port': self.port},
+	Line 70:             mongo.NA_INFO.insert({"ip": self.ip, "port": self.port,
+	Line 75:                 history_info = mongo.NA_INFO.find_and_modify(
+	Line 78:                     mongo.NA_INFO.insert(
+	Line 123:             mongo.NA_INFO.update({"ip": self.ip, "port": self.port}, {
+	Line 164:             history_info = mongo.NA_INFO.find_one(
+
+
+
+
+
+
+
+
+
+
 
 
 

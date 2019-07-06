@@ -81,39 +81,42 @@ def Getplugin():
 @app.route('/addtask', methods=['get', 'post'])
 @logincheck
 def Addtask():
-    title = request.form.get('title', '')
-    plugin = request.form.get('plugin', '')
-    condition = unquote(request.form.get('condition', ''))
-    plan = request.form.get('plan', 0)
-    ids = request.form.get('ids', '')
-    isupdate = request.form.get('isupdate', '0')
-    resultcheck = request.form.get('resultcheck', '0')
-    result = 'fail'
-    if plugin:
-        targets = []
-        if resultcheck == 'true':  # 结果集全选
-            list = condition.strip().split(';')
-            query = querylogic(list)
-            cursor = Mongo.coll['Info'].find(query)
-            for i in cursor:
-                tar = [i['ip'], i['port']]
-                targets.append(tar)
-        else:  # 当前页结果选择
-            for i in ids.split(','):
-                tar = [i.split(':')[0], int(i.split(':')[1])]
-                targets.append(tar)
-        temp_result = True
-        for p in plugin.split(','):
-            query = querylogic(condition.strip().split(';'))
-            item = {'status': 0, 'title': title, 'plugin': p, 'condition': condition, 'time': datetime.now(),
-                    'target': targets, 'plan': int(plan), 'isupdate': int(isupdate), 'query': dumps(query)}
-            insert_reuslt = Mongo.coll['Task'].insert(item)
-            if not insert_reuslt:
-                temp_result = False
-        if temp_result:
-            result = 'success'
-    return result
-
+    try:
+        title = request.form.get('title', '')
+        plugin = request.form.get('plugin', '')
+        condition = unquote(request.form.get('condition', ''))
+        plan = request.form.get('plan', 0)
+        ids = request.form.get('ids', '')
+        isupdate = request.form.get('isupdate', '0')
+        resultcheck = request.form.get('resultcheck', '0')
+        result = 'fail'
+        if plugin:
+            targets = []
+            if resultcheck == 'true':  # 结果集全选
+                list = condition.strip('').split(';')
+                query = querylogic(list)
+                cursor = Mongo.coll['Info'].find(query)
+                for i in cursor:
+                    tar = [i['ip'], i['port']]
+                    targets.append(tar)
+            else:  # 当前页结果选择
+                if ids:
+                    for i in ids.split(','):
+                        tar = [i.split(':')[0], int(i.split(':')[1])]
+                        targets.append(tar)
+            temp_result = True
+            for p in plugin.split(','):
+                query = querylogic(condition.strip().split(';'))
+                item = {'status': 0, 'title': title, 'plugin': p, 'condition': condition, 'time': datetime.now(),
+                        'target': targets, 'plan': int(plan), 'isupdate': int(isupdate), 'query': dumps(query)}
+                insert_reuslt = Mongo.coll['Task'].insert(item)
+                if not insert_reuslt:
+                    temp_result = False
+            if temp_result:
+                result = 'success'
+        return result
+    except Exception as e:
+        print("Addtask error:",e)
 
 # 任务列表页面
 @app.route('/task')

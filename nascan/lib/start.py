@@ -114,8 +114,8 @@ class start:
             [str(x / (256 ** i) % 256) for i in range(3, -1, -1)])
         if '-' in ip:
             ip_range = ip.split('-')
-            ip_start = long(iptonum(ip_range[0]))
-            ip_end = long(iptonum(ip_range[1]))
+            ip_start = int(iptonum(ip_range[0]))
+            ip_end = int(iptonum(ip_range[1]))
             ip_count = ip_end - ip_start
             if ip_count >= 0 and ip_count <= 655360:
                 for ip_num in range(ip_start, ip_end + 1):

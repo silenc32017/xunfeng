@@ -1,5 +1,5 @@
 # coding:utf-8
-import mongo
+from . import mongo
 from . import log
 import socket
 import datetime
